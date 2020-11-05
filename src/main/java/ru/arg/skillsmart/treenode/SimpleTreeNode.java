@@ -98,7 +98,17 @@ class SimpleTree<T> {
 
     public int LeafCount() {
         // количество листьев в дереве
-        final int[] leafCount = {0};
+        if (count == 0) {
+            return 0;
+        }
+        return (int) GetAllNodes().stream()
+                .filter(node -> node.Children == null || node.Children.isEmpty())
+                .count();
+    }
+
+    public int levelsCount() {
+        // количество уровней в дереве
+        final int[] leafLevelsCount = {0};
         applyFunctionToLeaf(this.Root, (leaf) -> {
             var root = leaf.Parent;
             int large = 1;
@@ -106,12 +116,12 @@ class SimpleTree<T> {
                 large ++;
                 root = root.Parent;
             }
-            boolean isLargestBranch = large > leafCount[0];
+            boolean isLargestBranch = large > leafLevelsCount[0];
             if (isLargestBranch) {
-                leafCount[0] = large;
+                leafLevelsCount[0] = large;
             }
             return isLargestBranch;
         });
-        return leafCount[0];
+        return leafLevelsCount[0];
     }
 }
