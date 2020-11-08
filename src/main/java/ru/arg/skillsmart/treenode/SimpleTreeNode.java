@@ -37,21 +37,18 @@ class SimpleTree<T> {
 
     public void DeleteNode(SimpleTreeNode<T> NodeToDelete) {
         // ваш код удаления существующего узла NodeToDelete
-        List<SimpleTreeNode<T>> listNodesToDelete = FindNodesByValue(NodeToDelete.NodeValue);
-        listNodesToDelete.forEach(node -> {
-            SimpleTreeNode<T> parent = node.Parent;
-            parent.Children.remove(node);
-            node.Parent = null;
-            node.NodeValue = null;
-            List<SimpleTreeNode<T>> children = node.Children;
-            if (children != null && !children.isEmpty()) {
-                children.forEach(child -> {
-                    MoveNode(child, parent);
-                });
-                node.Children.clear();
-            }
-            count--;
-        });
+        if (NodeToDelete == null || NodeToDelete.equals(this.Root)) return;
+        NodeToDelete.Parent.Children.remove(NodeToDelete);
+        if (!NodeToDelete.Children.isEmpty()) {
+            NodeToDelete.Children.forEach(child -> {
+                child.Parent = NodeToDelete.Parent;
+                NodeToDelete.Parent.Children.add(child);
+            });
+        }
+        NodeToDelete.NodeValue = null;
+        NodeToDelete.Parent = null;
+        NodeToDelete.Children.clear();
+        count--;
     }
 
     public List<SimpleTreeNode<T>> GetAllNodes() {
@@ -84,12 +81,9 @@ class SimpleTree<T> {
     public void MoveNode(SimpleTreeNode<T> OriginalNode, SimpleTreeNode<T> NewParent) {
         // ваш код перемещения узла вместе с его поддеревом --
         // в качестве дочернего для узла NewParent
-        if (OriginalNode != null && !OriginalNode.equals(this.Root)) {
-            OriginalNode.Parent = NewParent;
-            if (OriginalNode.Children == null || OriginalNode.Children.isEmpty()) {
-                OriginalNode.Children = new ArrayList<>();
-            }
-            NewParent.Children.add(OriginalNode);
+        if (!OriginalNode.equals(this.Root)) {
+            OriginalNode.Parent.Children.remove(OriginalNode);
+            AddChild(NewParent, OriginalNode);
         }
     }
 
