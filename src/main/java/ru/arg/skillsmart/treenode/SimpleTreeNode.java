@@ -37,13 +37,13 @@ class SimpleTree<T> {
 
     public void DeleteNode(SimpleTreeNode<T> NodeToDelete) {
         // ваш код удаления существующего узла NodeToDelete
-        if (NodeToDelete == null || NodeToDelete.equals(this.Root)) return;
+        if (NodeToDelete == Root || NodeToDelete == null) return;
         NodeToDelete.Parent.Children.remove(NodeToDelete);
         if (!NodeToDelete.Children.isEmpty()) {
-            NodeToDelete.Children.forEach(child -> {
+            for (SimpleTreeNode<T> child : NodeToDelete.Children) {
                 child.Parent = NodeToDelete.Parent;
                 NodeToDelete.Parent.Children.add(child);
-            });
+            }
         }
         NodeToDelete.NodeValue = null;
         NodeToDelete.Parent = null;
