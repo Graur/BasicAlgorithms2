@@ -39,15 +39,15 @@ class SimpleTree<T> {
         // ваш код удаления существующего узла NodeToDelete
         if (NodeToDelete == Root || NodeToDelete == null) return;
         NodeToDelete.Parent.Children.remove(NodeToDelete);
-        if (!NodeToDelete.Children.isEmpty()) {
+        if (NodeToDelete.Children != null && !NodeToDelete.Children.isEmpty()) {
             for (SimpleTreeNode<T> child : NodeToDelete.Children) {
                 child.Parent = NodeToDelete.Parent;
                 NodeToDelete.Parent.Children.add(child);
             }
+            NodeToDelete.Children.clear();
         }
         NodeToDelete.NodeValue = null;
         NodeToDelete.Parent = null;
-        NodeToDelete.Children.clear();
         count--;
     }
 
